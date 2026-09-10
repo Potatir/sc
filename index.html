@@ -2,7 +2,7 @@
 <html lang="ru" data-theme="dark">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Расписание занятий | 2026-2027 учебный год</title>
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -23,37 +23,36 @@
                     </div>
                     <div>
                         <h1 id="app-title">Расписание занятий</h1>
-                        <p class="subtitle">2026-2027 учебный год &bull; 1 период &bull; 1 неделя</p>
+                        <p class="subtitle">1 период &bull; 1 неделя</p>
                     </div>
                 </div>
 
-                <!-- Student Profile Switcher Tabs -->
-                <div class="student-switcher">
-                    <button class="student-btn active" data-student="danon">
-                        <i class="fa-solid fa-user-graduate"></i>
-                        <span>Данон</span>
-                    </button>
-                    <button class="student-btn" data-student="aidana">
-                        <i class="fa-solid fa-user-astronaut"></i>
-                        <span>Айдана</span>
-                    </button>
-                    <button class="student-btn" data-student="anzi">
-                        <i class="fa-solid fa-user-ninja"></i>
-                        <span>Anzi</span>
-                    </button>
-                </div>
-
                 <div class="header-actions">
-                    <!-- Dynamic Live Indicator -->
                     <div class="live-indicator" id="live-indicator">
                         <span class="pulse-dot"></span>
-                        <span id="current-time-text">Загрузка времени...</span>
+                        <span id="current-time-text">Загрузка...</span>
                     </div>
 
                     <button class="icon-btn" id="theme-toggle" title="Переключить тему">
                         <i class="fa-solid fa-moon"></i>
                     </button>
                 </div>
+            </div>
+
+            <!-- Student Profile Switcher Tabs -->
+            <div class="student-switcher">
+                <button class="student-btn active" data-student="danon">
+                    <i class="fa-solid fa-user-graduate"></i>
+                    <span>Данон</span>
+                </button>
+                <button class="student-btn" data-student="aidana">
+                    <i class="fa-solid fa-user-astronaut"></i>
+                    <span>Айдана</span>
+                </button>
+                <button class="student-btn" data-student="anzi">
+                    <i class="fa-solid fa-user-ninja"></i>
+                    <span>Anzi</span>
+                </button>
             </div>
 
             <!-- Current Class Banner -->
@@ -73,12 +72,12 @@
             </div>
         </header>
 
-        <!-- Controls Bar -->
+        <!-- Controls Section -->
         <section class="controls-section">
             <div class="search-filter-bar">
                 <div class="search-box">
                     <i class="fa-solid fa-magnifying-glass"></i>
-                    <input type="text" id="search-input" placeholder="Поиск по предмету, преподавателю, кабинету...">
+                    <input type="text" id="search-input" placeholder="Поиск по предмету, преподавателю...">
                     <button id="clear-search" class="clear-btn" style="display: none;"><i class="fa-solid fa-xmark"></i></button>
                 </div>
 
@@ -88,7 +87,7 @@
                         <select id="type-filter">
                             <option value="all">Все форматы</option>
                             <option value="Лекции">Лекции</option>
-                            <option value="Практические занятия">Практические занятия</option>
+                            <option value="Практические занятия">Практика</option>
                         </select>
                     </div>
 
@@ -96,19 +95,30 @@
                         <i class="fa-solid fa-book-open"></i>
                         <select id="subject-filter">
                             <option value="all">Все предметы</option>
-                            <!-- Dynamically populated per student -->
+                            <!-- Dynamically populated -->
                         </select>
                     </div>
                 </div>
 
                 <div class="view-toggles">
-                    <button class="view-btn active" data-view="grid" title="Сетка расписания (Таблица)">
+                    <button class="view-btn active" data-view="grid" title="Сетка расписания">
                         <i class="fa-solid fa-table-cells"></i> <span class="btn-text">Таблица</span>
                     </button>
                     <button class="view-btn" data-view="cards" title="По дням недели">
                         <i class="fa-solid fa-list-check"></i> <span class="btn-text">По дням</span>
                     </button>
                 </div>
+            </div>
+
+            <!-- Quick Day Selector for Mobile -->
+            <div class="mobile-day-bar" id="mobile-day-bar">
+                <button class="day-tab-btn active" data-day="all">Все</button>
+                <button class="day-tab-btn" data-day="1">ПН</button>
+                <button class="day-tab-btn" data-day="2">ВТ</button>
+                <button class="day-tab-btn" data-day="3">СР</button>
+                <button class="day-tab-btn" data-day="4">ЧТ</button>
+                <button class="day-tab-btn" data-day="5">ПТ</button>
+                <button class="day-tab-btn" data-day="6">СБ</button>
             </div>
         </section>
 
@@ -169,7 +179,7 @@
             <div class="stats-bar">
                 <div class="stat-item">
                     <i class="fa-solid fa-graduation-cap"></i>
-                    <span>Всего пар на неделе: <strong id="stat-total">0</strong></span>
+                    <span>Пар: <strong id="stat-total">0</strong></span>
                 </div>
                 <div class="stat-item">
                     <i class="fa-solid fa-book"></i>
@@ -177,10 +187,10 @@
                 </div>
                 <div class="stat-item">
                     <i class="fa-solid fa-laptop-code"></i>
-                    <span>Практики: <strong id="stat-practices">0</strong></span>
+                    <span>Практика: <strong id="stat-practices">0</strong></span>
                 </div>
             </div>
-            <p class="copyright">&copy; 2026 Расписание занятий. Интерактивная таблица.</p>
+            <p class="copyright">&copy; 2026 Расписание занятий.</p>
         </footer>
     </div>
 

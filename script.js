@@ -158,6 +158,7 @@ const anziSchedule = [
 
 // App State
 let currentStudent = localStorage.getItem("studentProfile") || "danon";
+let selectedDayFilter = "all"; // 'all' or 1..6
 let currentFilter = {
     search: "",
     type: "all",
@@ -174,6 +175,7 @@ function getActiveSchedule() {
 document.addEventListener("DOMContentLoaded", () => {
     initTheme();
     initStudentSwitcher();
+    initMobileDayBar();
     highlightTodayHeader();
     populateSubjectFilterOptions();
     renderGridTable();
@@ -181,12 +183,76 @@ document.addEventListener("DOMContentLoaded", () => {
     updateLiveTracker();
     updateFooterStats();
 
+    // Default to Day-by-Day mode on very small mobile screens for maximum ergonomics
+    if (window.innerWidth <= 600) {
+        switchToCardsView();
+    }
+
     // Event Listeners
     setupEventListeners();
 
     // Live clock interval
     setInterval(updateLiveTracker, 1000);
 });
+
+function switchToCardsView() {
+    const viewBtns = document.querySelectorAll(".view-btn");
+    viewBtns.forEach(b => b.classList.remove("active"));
+    const cardsBtn = document.querySelector('.view-btn[data-view="cards"]');
+    if (cardsBtn) cardsBtn.classList.add("active");
+
+    document.querySelectorAll(".view-container").forEach(v => v.classList.remove("active"));
+    document.getElementById("cards-view").classList.add("active");
+}
+
+// Mobile Quick Day Bar Filter
+function initMobileDayBar() {
+    const dayBtns = document.querySelectorAll(".day-tab-btn");
+    dayBtns.forEach(btn => {
+        btn.addEventListener("click", () => {
+            dayBtns.forEach(b => b.classList.remove("active"));
+            btn.classList.add("active");
+            selectedDayFilter = btn.dataset.day;
+
+            filterDays();
+        });
+    });
+}
+
+function filterDays() {
+    // Filter Table Columns
+    const tableHeaders = document.querySelectorAll(".schedule-table th.day-header");
+    const tableCells = document.querySelectorAll(".schedule-table td[data-day]");
+
+    tableHeaders.forEach(th => {
+        const day = th.dataset.day;
+        if (selectedDayFilter === "all" || selectedDayFilter === day) {
+            th.style.display = "";
+        } else {
+            th.style.display = "none";
+        }
+    });
+
+    tableCells.forEach(td => {
+        const day = td.dataset.day;
+        if (selectedDayFilter === "all" || selectedDayFilter === day) {
+            td.style.display = "";
+        } else {
+            td.style.display = "none";
+        }
+    });
+
+    // Filter Cards View Columns
+    const dayCols = document.querySelectorAll(".day-column");
+    dayCols.forEach(col => {
+        const day = col.dataset.day;
+        if (selectedDayFilter === "all" || selectedDayFilter === day) {
+            col.style.display = "flex";
+        } else {
+            col.style.display = "none";
+        }
+    });
+}
 
 // Student Switcher Setup
 function initStudentSwitcher() {
@@ -210,6 +276,7 @@ function initStudentSwitcher() {
             renderCardsView();
             updateLiveTracker();
             updateFooterStats();
+            filterDays();
             applyFilters();
         });
     });
@@ -252,7 +319,7 @@ function updateThemeIcon(theme) {
 // Highlight Current Day Header
 function highlightTodayHeader() {
     const now = new Date();
-    let currentDay = now.getDay(); // 0 is Sunday, 1 is Monday...
+    let currentDay = now.getDay();
     if (currentDay === 0) currentDay = 7;
 
     const headers = document.querySelectorAll(".day-header");
@@ -416,6 +483,7 @@ function renderCardsView() {
         const dayLessons = activeSchedule.filter(l => l.day === day);
         const col = document.createElement("div");
         col.className = `day-column ${day === currentDay ? "today-col" : ""}`;
+        col.dataset.day = day;
 
         const colHeader = document.createElement("div");
         colHeader.className = "day-col-header";
@@ -429,7 +497,7 @@ function renderCardsView() {
         lessonsList.className = "col-lessons-list";
 
         if (dayLessons.length === 0) {
-            lessonsList.innerHTML = `<div class="empty-day"><i class="fa-solid fa-mug-hot" style="margin-bottom:8px; font-size:1.5rem; display:block;"></i> Занятий нет</div>`;
+            lessonsList.innerHTML = `<div class="empty-day"><i class="fa-solid fa-mug-hot" style="margin-bottom:6px; font-size:1.4rem; display:block;"></i> Занятий нет</div>`;
         } else {
             dayLessons.forEach(lesson => {
                 const card = document.createElement("div");
