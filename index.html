@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="ru" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Расписание занятий | 2026-2027 учебный год</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="app-header">
+            <div class="header-main">
+                <div class="header-title-group">
+                    <div class="logo-icon">
+                        <i class="fa-solid fa-calendar-week"></i>
+                    </div>
+                    <div>
+                        <h1 id="app-title">Расписание занятий</h1>
+                        <p class="subtitle">2026-2027 учебный год &bull; 1 период &bull; 1 неделя</p>
+                    </div>
+                </div>
+
+                <!-- Student Profile Switcher Tabs -->
+                <div class="student-switcher">
+                    <button class="student-btn active" data-student="danon">
+                        <i class="fa-solid fa-user-graduate"></i>
+                        <span>Данон</span>
+                    </button>
+                    <button class="student-btn" data-student="aidana">
+                        <i class="fa-solid fa-user-astronaut"></i>
+                        <span>Айдана</span>
+                    </button>
+                    <button class="student-btn" data-student="anzi">
+                        <i class="fa-solid fa-user-ninja"></i>
+                        <span>Anzi</span>
+                    </button>
+                </div>
+
+                <div class="header-actions">
+                    <!-- Dynamic Live Indicator -->
+                    <div class="live-indicator" id="live-indicator">
+                        <span class="pulse-dot"></span>
+                        <span id="current-time-text">Загрузка времени...</span>
+                    </div>
+
+                    <button class="icon-btn" id="theme-toggle" title="Переключить тему">
+                        <i class="fa-solid fa-moon"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Current Class Banner -->
+            <div class="now-next-banner" id="now-next-banner">
+                <div class="banner-card current-class-card" id="current-class-card">
+                    <div class="banner-badge"><i class="fa-solid fa-play"></i> Сейчас идет</div>
+                    <div class="banner-content" id="current-class-content">
+                        <span class="no-class">Сейчас нет активных пар</span>
+                    </div>
+                </div>
+                <div class="banner-card next-class-card" id="next-class-card">
+                    <div class="banner-badge"><i class="fa-solid fa-forward"></i> Следующая пара</div>
+                    <div class="banner-content" id="next-class-content">
+                        <span class="no-class">Занятий больше нет на сегодня</span>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Controls Bar -->
+        <section class="controls-section">
+            <div class="search-filter-bar">
+                <div class="search-box">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    <input type="text" id="search-input" placeholder="Поиск по предмету, преподавателю, кабинету...">
+                    <button id="clear-search" class="clear-btn" style="display: none;"><i class="fa-solid fa-xmark"></i></button>
+                </div>
+
+                <div class="filter-group">
+                    <div class="select-wrapper">
+                        <i class="fa-solid fa-filter"></i>
+                        <select id="type-filter">
+                            <option value="all">Все форматы</option>
+                            <option value="Лекции">Лекции</option>
+                            <option value="Практические занятия">Практические занятия</option>
+                        </select>
+                    </div>
+
+                    <div class="select-wrapper">
+                        <i class="fa-solid fa-book-open"></i>
+                        <select id="subject-filter">
+                            <option value="all">Все предметы</option>
+                            <!-- Dynamically populated per student -->
+                        </select>
+                    </div>
+                </div>
+
+                <div class="view-toggles">
+                    <button class="view-btn active" data-view="grid" title="Сетка расписания (Таблица)">
+                        <i class="fa-solid fa-table-cells"></i> <span class="btn-text">Таблица</span>
+                    </button>
+                    <button class="view-btn" data-view="cards" title="По дням недели">
+                        <i class="fa-solid fa-list-check"></i> <span class="btn-text">По дням</span>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <!-- Grid View (Table: Days on top, Time on left) -->
+            <div id="grid-view" class="view-container active">
+                <div class="table-responsive">
+                    <table class="schedule-table" id="schedule-table">
+                        <thead>
+                            <tr>
+                                <th class="time-col-header">
+                                    <i class="fa-regular fa-clock"></i> Время
+                                </th>
+                                <th class="day-header" data-day="1">
+                                    <span class="day-name">Понедельник</span>
+                                    <span class="day-short">ПН</span>
+                                </th>
+                                <th class="day-header" data-day="2">
+                                    <span class="day-name">Вторник</span>
+                                    <span class="day-short">ВТ</span>
+                                </th>
+                                <th class="day-header" data-day="3">
+                                    <span class="day-name">Среда</span>
+                                    <span class="day-short">СР</span>
+                                </th>
+                                <th class="day-header" data-day="4">
+                                    <span class="day-name">Четверг</span>
+                                    <span class="day-short">ЧТ</span>
+                                </th>
+                                <th class="day-header" data-day="5">
+                                    <span class="day-name">Пятница</span>
+                                    <span class="day-short">ПТ</span>
+                                </th>
+                                <th class="day-header" data-day="6">
+                                    <span class="day-name">Суббота</span>
+                                    <span class="day-short">СБ</span>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody id="table-body">
+                            <!-- Dynamically populated by JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Cards View (Day-by-Day columns) -->
+            <div id="cards-view" class="view-container">
+                <div class="days-columns" id="days-columns">
+                    <!-- Dynamically populated by JS -->
+                </div>
+            </div>
+        </main>
+
+        <!-- Quick Stats Footer -->
+        <footer class="app-footer">
+            <div class="stats-bar">
+                <div class="stat-item">
+                    <i class="fa-solid fa-graduation-cap"></i>
+                    <span>Всего пар на неделе: <strong id="stat-total">0</strong></span>
+                </div>
+                <div class="stat-item">
+                    <i class="fa-solid fa-book"></i>
+                    <span>Лекции: <strong id="stat-lectures">0</strong></span>
+                </div>
+                <div class="stat-item">
+                    <i class="fa-solid fa-laptop-code"></i>
+                    <span>Практики: <strong id="stat-practices">0</strong></span>
+                </div>
+            </div>
+            <p class="copyright">&copy; 2026 Расписание занятий. Интерактивная таблица.</p>
+        </footer>
+    </div>
+
+    <!-- Modal for Detailed Lesson View -->
+    <div class="modal-backdrop" id="modal-backdrop">
+        <div class="modal" id="lesson-modal">
+            <button class="modal-close" id="modal-close"><i class="fa-solid fa-xmark"></i></button>
+            <div class="modal-header">
+                <span class="modal-badge" id="modal-type">Тип</span>
+                <span class="modal-code" id="modal-code">Код</span>
+                <h2 id="modal-title">Название предмета</h2>
+            </div>
+            <div class="modal-body">
+                <div class="modal-info-grid">
+                    <div class="info-item">
+                        <i class="fa-regular fa-clock"></i>
+                        <div>
+                            <span class="info-label">Время</span>
+                            <span class="info-value" id="modal-time">--:-- - --:--</span>
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <i class="fa-regular fa-calendar"></i>
+                        <div>
+                            <span class="info-label">День недели</span>
+                            <span class="info-value" id="modal-day">---</span>
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <i class="fa-solid fa-location-dot"></i>
+                        <div>
+                            <span class="info-label">Аудитория</span>
+                            <span class="info-value" id="modal-room">---</span>
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <i class="fa-solid fa-user-graduate"></i>
+                        <div>
+                            <span class="info-label">Преподаватель</span>
+                            <span class="info-value" id="modal-teacher">---</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary" id="modal-close-btn">Закрыть</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
